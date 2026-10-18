@@ -1,0 +1,21 @@
+{
+  "name": "gemini-export-bookmarklet",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "One-click bookmarklet that exports the Gemini conversation you are viewing to a Markdown file.",
+  "license": "MIT",
+  "homepage": "https://github.com/EthanThatOneKid/gemini-export-bookmarklet",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EthanThatOneKid/gemini-export-bookmarklet.git"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "^30.1.3",
+    "terser": "^5.51.2"
+  }
+}

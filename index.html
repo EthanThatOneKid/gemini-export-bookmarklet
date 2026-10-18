@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gemini Export Bookmarklet</title>
+    <meta
+      name="description"
+      content="One-click bookmarklet that exports the Gemini conversation you are viewing to a Markdown file."
+    />
+    <style>
+      :root {
+        --bg: #0f1115;
+        --card: #171a21;
+        --fg: #f2f4f8;
+        --muted: #9aa3b2;
+        --accent: #8ab4f8;
+        --border: #262b36;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1.25rem;
+        background: var(--bg);
+        color: var(--fg);
+        font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      }
+
+      main {
+        width: 100%;
+        max-width: 40rem;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        padding: 2rem;
+      }
+
+      h1 {
+        margin: 0 0 0.5rem;
+        font-size: 1.5rem;
+        letter-spacing: -0.01em;
+      }
+
+      p {
+        color: var(--muted);
+        margin: 0 0 1.5rem;
+      }
+
+      .install {
+        display: inline-block;
+        padding: 0.75rem 1.25rem;
+        border-radius: 0.6rem;
+        background: var(--accent);
+        color: #0b1220;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: grab;
+      }
+
+      .install:active {
+        cursor: grabbing;
+      }
+
+      ol {
+        margin: 1.75rem 0 0;
+        padding-left: 1.25rem;
+        color: var(--muted);
+      }
+
+      ol li {
+        margin-bottom: 0.6rem;
+      }
+
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.9em;
+        color: var(--fg);
+        background: #0d1017;
+        border: 1px solid var(--border);
+        border-radius: 0.35rem;
+        padding: 0.1rem 0.35rem;
+      }
+
+      .actions {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      button {
+        font: inherit;
+        color: var(--fg);
+        background: #0d1017;
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        padding: 0.5rem 0.9rem;
+        cursor: pointer;
+      }
+
+      button:hover {
+        border-color: var(--accent);
+      }
+
+      #status {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      footer {
+        margin-top: 2rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+
+      a.plain {
+        color: var(--accent);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Gemini Export Bookmarklet</h1>
+      <p>Exports the Gemini conversation you are viewing to a Markdown file, entirely in your browser.</p>
+
+      <a id="install" class="install" href="#" draggable="true">Export Gemini Chat</a>
+
+      <ol>
+        <li>Show your bookmarks bar: <code>Ctrl/Cmd + Shift + B</code>.</li>
+        <li>Drag the button above onto the bar.</li>
+        <li>Open any conversation at <code>gemini.google.com</code>, then click the bookmark.</li>
+        <li>A <code>gemini-chat-YYYY-MM-DD.md</code> file downloads.</li>
+      </ol>
+
+      <div class="actions">
+        <button id="copy" type="button">Copy bookmarklet URL</button>
+        <span id="status" role="status"></span>
+      </div>
+
+      <footer>
+        No network requests, no accounts, no data leaves your machine. Source:
+        <a class="plain" href="https://github.com/EthanThatOneKid/gemini-export-bookmarklet">EthanThatOneKid/gemini-export-bookmarklet</a>.
+      </footer>
+    </main>
+
+    <!-- build:bookmarklet:start -->
+    <script type="text/plain" id="bookmarklet">javascript:!function(){document.querySelectorAll('user-query, .query-text, [data-test-id="user-query"]'),document.querySelectorAll('model-response, .model-response-text, [data-test-id="model-response"]');let e=`# Gemini Chat Export\n*Exported on: ${(new Date).toLocaleString()}*\n\n---\n\n`;const n=document.querySelectorAll("message-content, .conversation-container, .user-query-container");if(0===n.length){const n=Array.from(document.querySelectorAll("user-query, .query-text-content")),t=Array.from(document.querySelectorAll("model-response, .response-container-content")),r=Math.max(n.length,t.length);for(let o=0;o<r;o++)if(n[o]&&(e+=`### User\n${n[o].innerText.trim()}\n\n`),t[o]){let n=t[o].innerText.trim();e+=`#### Gemini\n${n}\n\n---\n\n`}}else n.forEach(n=>{const t=n.matches("user-query")||n.closest("user-query")||n.classList.contains("user-query-container"),r=n.innerText.trim();e+=t?`### User\n${r}\n\n`:`#### Gemini\n${r}\n\n---\n\n`});const t=new Blob([e],{type:"text/markdown"}),r=URL.createObjectURL(t),o=document.createElement("a");o.href=r,o.download=`gemini-chat-${(new Date).toISOString().slice(0,10)}.md`,document.body.appendChild(o),o.click(),document.body.removeChild(o),URL.revokeObjectURL(r)}();</script>
+    <!-- build:bookmarklet:end -->
+
+    <script>
+      const source = document.getElementById("bookmarklet").textContent.trim();
+      const install = document.getElementById("install");
+      const status = document.getElementById("status");
+
+      if (source) {
+        install.href = source;
+        install.title = "Drag me to your bookmarks bar";
+      } else {
+        install.href = "";
+        status.textContent = "Run npm run build to generate the bookmarklet.";
+      }
+
+      document.getElementById("copy").addEventListener("click", async () => {
+        if (!source) return;
+
+        const copied = `Copied ${source.length.toLocaleString()} characters.`;
+
+        try {
+          await navigator.clipboard.writeText(source);
+          status.textContent = copied;
+        } catch {
+          const area = document.createElement("textarea");
+          area.value = source;
+          document.body.appendChild(area);
+          area.select();
+          const ok = document.execCommand("copy");
+          document.body.removeChild(area);
+          status.textContent = ok ? copied : "Copy failed. Paste the URL from bookmarklet.min.js instead.";
+        }
+      });
+    </script>
+  </body>
+</html>
